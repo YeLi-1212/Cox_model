@@ -205,6 +205,18 @@ for(i in 1:length(delete_variables)){
 }
 second_selection <- mulfeature[,-delete_index]
 
+#since following ERROR occurs:
+#Warning message:
+#  In fitter(X, Y, strata = Strata, offset = offset, weights = weights,  :
+#             Loglik converged before variable  35 ; beta may be infinite. 
+# i try to delete to the 35th variable to find out what will happen
+#"LYMPHADENECTOMY"
+#                          coef exp(coef) se(coef)      z    p
+#second_selection[[35]] -0.0967     0.908    0.126 -0.768 0.44
+#it seems this variable has little contribution to the risk score
+
+second_selection <- second_selection[,-35]
+
 index <- c()
 
 for(i in 1:1600){
@@ -226,7 +238,7 @@ death <- origin_death[-index]
 
 folds <- split(sample(nrow(second_selection),size = nrow(second_selection)),1:10)
 
-for(i in 1:5)
+for(i in 1:10)
 {
   print(i)
   
@@ -248,7 +260,9 @@ for(i in 1:5)
                        NON_TARGET+TARGET+BONE+RECTAL+LYMPH_NODES+KIDNEYS+
                        LUNGS+LIVER+PLEURA+OTHER+PROSTATE+ADRENAL+BLADDER+
                        PERITONEUM+COLON+SOFT_TISSUE+ABDOMINAL+ORCHIDECTOMY+
-                       PROSTATECTOMY+TURP+LYMPHADENECTOMY+SPINAL_CORD_SURGERY+
+                       PROSTATECTOMY+TURP
+                       #+LYMPHADENECTOMY
+                       +SPINAL_CORD_SURGERY+
                        BILATERAL_ORCHIDECTOMY+PRIOR_RADIOTHERAPY+ANALGESICS+
                        ANTI_ANDROGENS+GLUCOCORTICOID+GONADOTROPIN+BISPHOSPHONATE+
                        CORTICOSTEROID+IMIDAZOLE+ACE_INHIBITORS+BETA_BLOCKING+
